@@ -1,0 +1,38 @@
+[
+    {
+        "latLng": [28.555830555556, 33.975561111111],
+        "name": "Saint Catherine's Monastery",
+        "urlSearchTerm": "Saint%20Catherine's%20Monastery",
+        "imageSrc": "../images/Saint-Catherine-Monastery.jpg"
+    },
+    {
+        "latLng": [31.208871, 29.909201],
+        "name": "Bibliotheca Alexandrina",
+        "urlSearchTerm": "Bibliotheca%20Alexandrina",
+        "imageSrc": "../images/Bibliotheca-Alexandrina.jpg"
+    },
+    {
+      "latLng": [29.977296, 31.132496],
+      "name": "The Great Pyramids Of Giza",
+      "urlSearchTerm": "Giza%20Pyramids",
+      "imageSrc": "../images/Giza-Pyramids.jpg"
+    },
+    {
+      "latLng": [25.718835, 32.65727],
+      "name": "Karnak Temple",
+      "urlSearchTerm": "Karnak",
+      "imageSrc": "../images/Karnak.jpg"
+    },
+    {
+      "latLng": [23.97058, 32.87754],
+      "name": "Aswan Dam",
+      "urlSearchTerm": "Aswan%20Dam",
+      "imageSrc": "../images/Aswan-Dam.jpg"
+    },
+    {
+      "latLng": [28.572268, 34.537311],
+      "name": "Dahab Blue Hole",
+      "urlSearchTerm": "Blue%20Hole%20(%20Red%20Sea%20)",
+      "imageSrc": "../images/Blue-Hole.jpg"
+    }
+]

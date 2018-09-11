@@ -1,0 +1,142 @@
+body {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0
+}
+
+/* The container of the whole page */
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+/* List Properties */
+#list {
+  position: absolute;
+  z-index: 3;
+  left: 0%;
+  height: 100vh
+}
+
+.list-container {
+  background-color: #000;
+  color: white;
+  position: relative;
+  height: 100vh;
+}
+
+.list-icon {
+  position: absolute;
+  left: 100%;
+  top: 0;
+  margin: 1.2rem 0 0 1.2rem;
+  z-index: 2;
+  font-size: 2rem;
+  cursor: pointer;
+}
+
+.list-container h1 {
+  text-align: center;
+  margin-top: 0;
+  padding: 1.2rem
+}
+
+.list-container form {
+  display: flex;
+  flex-direction: row;
+  margin: 2rem 0;
+}
+
+.list-container form select {
+  padding: .3rem;
+  width: 60%;
+  margin-left: 1rem
+}
+
+.list-container form #filter {
+  width: 20%;
+  background-color: #c22632;
+  color: white;
+  font-weight: bold;
+  border: none;
+  margin-left: 1rem;
+  cursor: pointer
+}
+
+.locations-list { 
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  padding-left: 0;
+  margin-bottom: 0
+}
+
+.list-item {
+  width: 100%;
+  border-bottom: 1px solid white;
+  text-align: center;
+  font-size: 1.3rem;
+  padding: 2rem 0;
+  cursor: pointer;
+}
+
+.list-item:hover {
+  background-color: #2e869d;
+  font-weight: bold;
+}
+
+/* Map Properties */
+#map {
+  width: 100%;
+  height: 100vh
+}
+
+.gm-style-iw {
+  max-width: 240px
+}
+
+.popup-container {
+  padding-top: .5rem;
+}
+
+.popup-image {
+  max-width: 100%;
+}
+
+#attribution a {
+  font-weight: bold;
+  color: black
+}
+
+/* Hide list */
+.close-list {
+  left: -48rem !important
+}
+
+.close-list-icon {
+  left: 48rem
+}
+
+/* Viewport Properties */
+@media (max-width: 375px) {
+  #list {
+    width: 14rem
+  }
+
+  .list-icon {
+    font-size: 1.5rem
+  }
+
+  .list-container h1 {
+    font-size: 1.3rem;
+    padding-bottom: 0
+  }
+
+  .list-container form {
+    margin-bottom: 1rem
+  }
+
+  .list-item {
+    font-size: 1rem
+  }
+}
