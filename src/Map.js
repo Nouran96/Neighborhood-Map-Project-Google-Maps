@@ -10,13 +10,13 @@ let map,
 
 export class MapContainer extends Component {
 
-    componentWillReceiveProps({isScriptLoaded, isScriptLoadSucceed}){
-        if (isScriptLoadSucceed && !this.props.isScriptLoaded) {
+    componentWillReceiveProps({isScriptLoadSucceed}){
+        if (isScriptLoadSucceed) {
             if(isScriptLoadSucceed)
                 this.initMap()
         }
-        else{
-            alert("Google Maps couldn't be loaded")
+        else {
+            alert('Google Maps couldn\'t be loaded')
         }
     }
 
@@ -240,7 +240,6 @@ export class MapContainer extends Component {
 }
 
 export default scriptLoader(
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyBsjpj_qNuY2VIY3yxAvEX_iglcEm0yB9Q',
-    'https://maps.googleapis.com/maps/api/js'
+    'https://maps.googleapis.com/maps/api/js?key=AIzaSyBsjpj_qNuY2VIY3yxAvEX_iglcEm0yB9Q'
 )(MapContainer)
 
