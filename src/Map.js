@@ -38,7 +38,9 @@ export class MapContainer extends Component {
     initMap() {
         map = new window.google.maps.Map(document.getElementById('map'), {
             center: {lat: 27.318739, lng: 29.200092},
-            zoom: 5.5
+            zoom: 5.5,
+            zoomControl: false,
+            fullscreenControl: false
         });
 
         this.createMarkersWithPopups()
