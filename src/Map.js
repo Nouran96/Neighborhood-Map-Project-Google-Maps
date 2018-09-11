@@ -24,6 +24,13 @@ export class MapContainer extends Component {
     }
 
     componentDidUpdate() {
+        this.centerMapIfNeeded(); // Center map on certain viewport size
+
+        // Listen to changes of viewport to center map
+        window.addEventListener('resize', () => {
+            this.centerMapIfNeeded()
+        })
+
         this.showClickedLocationPopup(this.props.clickedLocation)
         this.showChosenMarker(this.props.chosenLocation)
     }
@@ -117,6 +124,27 @@ export class MapContainer extends Component {
                 markerData.marker.setMap(null)
             }
         })
+    }
+
+    centerMapIfNeeded() {
+        if(document.body.clientWidth <= 800) {
+            this.centerMap()
+        }
+        else {
+            this.returnMapToOriginal()
+        }
+    }
+
+    // Center map on small and medium screens
+    centerMap() {
+        map.setCenter({lat: 27.318739, lng: 31.900092})
+        map.setZoom(4.5)
+    }
+
+    // return map to original center if viewport is larger that 800
+    returnMapToOriginal() {
+        map.setCenter({lat: 27.318739, lng: 29.200092})
+        map.setZoom(5.5)
     }
 
     // Open the popup with bounce animation
