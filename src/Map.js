@@ -10,9 +10,10 @@ let map,
 
 export class MapContainer extends Component {
 
-    componentWillReceiveProps({isScriptLoadSucceed}){
-        if (isScriptLoadSucceed) {
-            this.initMap()
+    componentWillReceiveProps({isScriptLoaded, isScriptLoadSucceed}){
+        if (isScriptLoadSucceed && !this.props.isScriptLoaded) {
+            if(isScriptLoadSucceed)
+                this.initMap()
         }
         else{
             alert("Google Maps couldn't be loaded")
@@ -20,6 +21,10 @@ export class MapContainer extends Component {
     }
 
     componentDidMount() {
+        const { isScriptLoaded, isScriptLoadSucceed } = this.props
+        if (isScriptLoaded && isScriptLoadSucceed) {
+            this.initMap()
+        }
         this.getLocationsDescription()
     }
 
@@ -139,14 +144,18 @@ export class MapContainer extends Component {
 
     // Center map on small and medium screens
     centerMap() {
-        map.setCenter({lat: 27.318739, lng: 31.900092})
-        map.setZoom(4.5)
+        if(map) {
+            map.setCenter({lat: 27.318739, lng: 31.900092})
+            map.setZoom(4.5)
+        }
     }
 
     // return map to original center if viewport is larger that 800
     returnMapToOriginal() {
-        map.setCenter({lat: 27.318739, lng: 29.200092})
-        map.setZoom(5.5)
+        if(map) {
+            map.setCenter({lat: 27.318739, lng: 29.200092})
+            map.setZoom(5.5)
+        }
     }
 
     // Open the popup with bounce animation
@@ -231,6 +240,7 @@ export class MapContainer extends Component {
 }
 
 export default scriptLoader(
-    'https://maps.googleapis.com/maps/api/js?key=AIzaSyBsjpj_qNuY2VIY3yxAvEX_iglcEm0yB9Q'
+    'https://maps.googleapis.com/maps/api/js?key=AIzaSyBsjpj_qNuY2VIY3yxAvEX_iglcEm0yB9Q',
+    'https://maps.googleapis.com/maps/api/js'
 )(MapContainer)
 
