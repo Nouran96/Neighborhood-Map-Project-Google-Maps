@@ -25,6 +25,10 @@ export class MapContainer extends Component {
         this.getLocationsDescription()
     }
 
+    componentDidUpdate() {
+        this.showClickedLocationPopup(this.props.clickedLocation)
+    }
+
     initMap() {
         map = new window.google.maps.Map(document.getElementById('map'), {
             center: {lat: 27.318739, lng: 29.200092},
@@ -69,6 +73,18 @@ export class MapContainer extends Component {
                 
             })
         })
+    }
+
+    showClickedLocationPopup(locationName) {
+        if(this.props.filtered) {
+            this.closeAllPopups()
+        }
+
+        for(let i = 0; i < popups.length; i++) {
+            if(popups[i].id === locationName) {
+                this.openPopup(markers[i].marker, popups[i].popup)              
+            }
+        }
     }
 
     // Open the popup with bounce animation
