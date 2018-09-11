@@ -7,6 +7,11 @@ let map,
     popups = [];
 
 export class MapContainer extends Component {
+    state = {
+        popupOpened: false, // Checker for any opened popup window
+        markerOpened: '' // Stores the marker of the opened popup
+    }
+
     componentWillReceiveProps({isScriptLoadSucceed}){
         if (isScriptLoadSucceed) {
             this.initMap()
@@ -30,34 +35,78 @@ export class MapContainer extends Component {
     }
 
     createMarkersWithPopups() {
+        this.props.mapLocations.forEach(location => {
+
+            let marker = new window.google.maps.Marker({
+                position: {lat: location.latLng[0], lng: location.latLng[1]},
+                map: map
+            })
+
+            markers.push({id: location.name, marker: marker, element: marker._element})
+
+            let popup = new window.google.maps.InfoWindow()
+
+            this.addTextToPopup(popup, location)
+
+            popups.push({id: location.name, popup: popup})
+
+            marker.addListener('click', () => {
+                if(this.state.popupOpened === false) { // No popup is opened
+                    this.openPopup(marker, popup)
+                    this.setState({popupOpened: true, markerOpened: marker})
+                }
+                else {
+                    if(this.state.markerOpened === marker) { // If the same marker is clicked again, close the popup
+                        this.closeAllPopups()
+                        this.setState({popupOpened: false, markerOpened: ''})
+                    }
+                    else { // If another marker is clicked while a popup is opened, close the old popup and open the new one
+                        this.closeAllPopups()
+                        this.openPopup(marker, popup)
+                        this.setState({popupOpened: true, markerOpened: marker})
+                    }
+                }
+                
+            })
+        })
+    }
+
+    // Open the popup with bounce animation
+    openPopup(marker, popup) {
+        marker.setAnimation(window.google.maps.Animation.BOUNCE) // Add bounce animation on click
+        setTimeout(() => {marker.setAnimation(null)}, 100) // Remove animation
+        popup.open(map, marker)
+    }
+
+    closeAllPopups() {
+        popups.forEach(popupData => {
+            popupData.popup.close()
+        })
+    }
+
+    addTextToPopup(popup, location) {
         Promise.all(descriptionResults).then(results => {
             results.forEach(data => {
-                this.props.mapLocations.forEach(location => {
-
-                    let marker = new window.google.maps.Marker({
-                        position: {lat: location.latLng[0], lng: location.latLng[1]},
-                        map: map
-                    })
-
-                    markers.push(marker)
-        
-                    let popup = new window.google.maps.InfoWindow({
-                        content: `
+                // Take only the description that has the same id as the location
+                if(data.hasOwnProperty('id') && data.id === location.id) {
+                    popup.setContent(`
+                    <div class="popup-container">
+                        <img class="popup-image" src=${location.imageSrc} alt=${location.name}/>
+                        <h3>${location.name}</h3>
+                        <p id="description">${data.description}</p>
+                        <p id="attribution"><a href="https://www.mediawiki.org/wiki/API:Main_page" target="_blank">Wikimedia API</a></p>
+                    </div>
+                    `)
+                }
+                // In case of error in fetching the description from API
+                if(!data.hasOwnProperty('id')) {
+                    popup.setContent(`
                         <div class="popup-container">
-                            <img class="popup-image" src=${location.imageSrc} alt=${location.name}/>
-                            <h3>${location.name}</h3>
-                            <p id="description">${data.description}</p>
-                            <p id="attribution"><a href="https://www.mediawiki.org/wiki/API:Main_page" target="_blank">Wikimedia API</a></p>
-                        </div>`
-                    })
-
-                    marker.addListener('click', () => {
-                        popup.open(map, marker)
-                    })
-
-                    popups.push(popup)
-                })
-            }) 
+                            <p>${data}</p>
+                        </div>
+                    `)
+                }
+            })
         })
     }
 
