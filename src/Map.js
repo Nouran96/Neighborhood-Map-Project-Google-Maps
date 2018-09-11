@@ -2,15 +2,13 @@ import React, {Component} from 'react'
 import scriptLoader from 'react-async-script-loader'
 
 let map,
-    descriptionResults = [],
-    markers = [],
-    popups = [];
+    descriptionResults = [], // Stores all fetched descriptions promises
+    markers = [], // Stores all markers data
+    popups = [], // Stores all popups data
+    popupOpened = false, // Checker for any opened popups
+    markerOpened = ''; // Stores the opened popup corresponding marker
 
 export class MapContainer extends Component {
-    state = {
-        popupOpened: false, // Checker for any opened popup window
-        markerOpened: '' // Stores the marker of the opened popup
-    }
 
     componentWillReceiveProps({isScriptLoadSucceed}){
         if (isScriptLoadSucceed) {
@@ -27,6 +25,7 @@ export class MapContainer extends Component {
 
     componentDidUpdate() {
         this.showClickedLocationPopup(this.props.clickedLocation)
+        this.showChosenMarker(this.props.chosenLocation)
     }
 
     initMap() {
@@ -55,19 +54,22 @@ export class MapContainer extends Component {
             popups.push({id: location.name, popup: popup})
 
             marker.addListener('click', () => {
-                if(this.state.popupOpened === false) { // No popup is opened
+                if(popupOpened === false) { // No popup is opened
                     this.openPopup(marker, popup)
-                    this.setState({popupOpened: true, markerOpened: marker})
+                    popupOpened = true
+                    markerOpened = marker
                 }
                 else {
-                    if(this.state.markerOpened === marker) { // If the same marker is clicked again, close the popup
+                    if(markerOpened === marker) { // If the same marker is clicked again, close the popup
                         this.closeAllPopups()
-                        this.setState({popupOpened: false, markerOpened: ''})
+                        popupOpened = false
+                        markerOpened = ''
                     }
                     else { // If another marker is clicked while a popup is opened, close the old popup and open the new one
                         this.closeAllPopups()
                         this.openPopup(marker, popup)
-                        this.setState({popupOpened: true, markerOpened: marker})
+                        popupOpened = true
+                        markerOpened = marker
                     }
                 }
                 
@@ -76,15 +78,45 @@ export class MapContainer extends Component {
     }
 
     showClickedLocationPopup(locationName) {
-        if(this.props.filtered) {
+        if(this.props.filtered) { // Remove all popups if filter button is clicked
             this.closeAllPopups()
+            popupOpened = false
+            markerOpened = ''
+            this.props.hideAllPopups()
         }
 
         for(let i = 0; i < popups.length; i++) {
-            if(popups[i].id === locationName) {
-                this.openPopup(markers[i].marker, popups[i].popup)              
+            if(popups[i].id === locationName) { // Show the popup needed and close any other opened one
+                this.closeAllPopups()
+                this.openPopup(markers[i].marker, popups[i].popup)
+                popupOpened = true
+                markerOpened = markers[i].marker
+                break;
+            }
+            else if(locationName === '') { // Close the popup if the same location is clicked twice
+                this.closeAllPopups()
+                popupOpened = false
+                markerOpened = ''
+                break;
             }
         }
+    }
+
+    showChosenMarker(locationName) {
+        markers.forEach(markerData => {
+            // Show all markers
+            if(locationName === 'all'){
+                markerData.marker.setMap(map)
+            }
+            // Show specific marker on filteration
+            else if(markerData.id === locationName) {
+                markerData.marker.setMap(map)
+            }
+            // Remove any other marker on filteration
+            else{
+                markerData.marker.setMap(null)
+            }
+        })
     }
 
     // Open the popup with bounce animation
